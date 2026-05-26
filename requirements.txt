@@ -1,0 +1,15 @@
+sentence-transformers
+psycopg2-binary
+pgvector
+numpy
+pandas
+scikit-learn
+datasets
+kaggle
+tqdm
+python-dotenv
+sqlalchemy
+jupyter
+ipykernel
+matplotlib
+seaborn
