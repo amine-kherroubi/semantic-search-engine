@@ -128,13 +128,13 @@ The project includes automated tests for preprocessing utilities. These tests va
 
 Functional validation should include the following manual checks after ingestion:
 
-| Test case | Expected behavior |
-| --- | --- |
-| Query about space missions | Returns NASA, satellite, or launch-related articles |
-| Query about financial markets | Returns business and market-related articles |
-| Query about football championship | Returns sports articles |
-| Query with `--no-tfidf` | Displays only semantic pgvector results |
-| Evaluation script | Produces CSV and PNG files under `data/` |
+| Test case                         | Expected behavior                                   |
+| --------------------------------- | --------------------------------------------------- |
+| Query about space missions        | Returns NASA, satellite, or launch-related articles |
+| Query about financial markets     | Returns business and market-related articles        |
+| Query about football championship | Returns sports articles                             |
+| Query with `--no-tfidf`           | Displays only semantic pgvector results             |
+| Evaluation script                 | Produces CSV and PNG files under `data/`            |
 
 ## Performance Analysis
 
@@ -263,22 +263,22 @@ Common failure modes include missing PostgreSQL, missing pgvector, invalid crede
 
 ## Mapping to Project Requirements
 
-| Requirement | Implementation |
-| --- | --- |
-| Python language | Application code and scripts are written in Python. |
-| PostgreSQL + pgvector | Schema enables pgvector and stores embeddings in a `VECTOR(384)` column. |
-| Sentence-Transformers | Embeddings are generated with `all-MiniLM-L6-v2`. |
-| Public dataset with at least 1,000 text documents | AG News from Hugging Face contains approximately 120,000 documents. |
-| Text preprocessing pipeline | `clean_text`, `chunk_text`, and `truncate` are implemented in utilities. |
-| Embedding generation | `encode_texts` and `encode_query` wrap Sentence-Transformers. |
-| Vector storage and indexing | SQL schema defines documents, embeddings, and an IVFFlat cosine index. |
-| Runtime query vectorization | Query text is embedded before semantic search. |
-| Similarity computation | pgvector cosine distance is converted to similarity. |
-| Top-k retrieval | Semantic and TF-IDF search functions both accept `top_k`. |
-| Classical comparison | TF-IDF baseline is implemented with scikit-learn. |
-| Functional tests | Preprocessing tests are included under `tests/`. |
-| Performance analysis | Evaluation script measures latency and writes result artifacts. |
-| Critical discussion | Limitations and improvements are documented in this report. |
+| Requirement                                       | Implementation                                                           |
+| ------------------------------------------------- | ------------------------------------------------------------------------ |
+| Python language                                   | Application code and scripts are written in Python.                      |
+| PostgreSQL + pgvector                             | Schema enables pgvector and stores embeddings in a `VECTOR(384)` column. |
+| Sentence-Transformers                             | Embeddings are generated with `all-MiniLM-L6-v2`.                        |
+| Public dataset with at least 1,000 text documents | AG News from Hugging Face contains approximately 120,000 documents.      |
+| Text preprocessing pipeline                       | `clean_text`, `chunk_text`, and `truncate` are implemented in utilities. |
+| Embedding generation                              | `encode_texts` and `encode_query` wrap Sentence-Transformers.            |
+| Vector storage and indexing                       | SQL schema defines documents, embeddings, and an IVFFlat cosine index.   |
+| Runtime query vectorization                       | Query text is embedded before semantic search.                           |
+| Similarity computation                            | pgvector cosine distance is converted to similarity.                     |
+| Top-k retrieval                                   | Semantic and TF-IDF search functions both accept `top_k`.                |
+| Classical comparison                              | TF-IDF baseline is implemented with scikit-learn.                        |
+| Functional tests                                  | Preprocessing tests are included under `tests/`.                         |
+| Performance analysis                              | Evaluation script measures latency and writes result artifacts.          |
+| Critical discussion                               | Limitations and improvements are documented in this report.              |
 
 ## Appendix: Example Execution Plan
 
