@@ -21,7 +21,7 @@ def main() -> None:
     if not test_connection():
         console.print("[red]Cannot reach the database. Check your .env settings.[/red]")
         sys.exit(1)
-    console.print("[green]✓ Connected[/green]")
+    console.print("[green]OK Connected[/green]")
 
     schema_path = Path(__file__).parent.parent / "sql" / "schema.sql"
     sql = schema_path.read_text()
@@ -37,18 +37,25 @@ def main() -> None:
                 cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
                 conn.commit()
             except Exception as e:
-                console.print(f"[yellow]Note: Could not create extension (it may already exist or you lack superuser privileges): {e}[/yellow]")
+                console.print(
+                    "[yellow]Note: Could not create extension "
+                    "(it may already exist or you lack superuser privileges): "
+                    f"{e}[/yellow]"
+                )
                 conn.rollback()
-            
+
             # 2. Handle schema
             for statement in statements:
                 try:
                     cur.execute(statement)
                 except Exception as e:
-                    console.print(f"[red]Error executing statement: {statement[:50]}... - {e}[/red]")
+                    console.print(
+                        "[red]Error executing statement: "
+                        f"{statement[:50]}... - {e}[/red]"
+                    )
                     raise
 
-    console.print("[green]✓ Schema applied.[/green]")
+    console.print("[green]OK Schema applied.[/green]")
     console.print("Run [bold]python scripts/ingest.py[/bold] to load documents.")
 
 

@@ -7,9 +7,6 @@ from __future__ import annotations
 from typing import List
 
 from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich import box
 
 from src.search.semantic import SearchResult
 
@@ -19,34 +16,24 @@ console = Console()
 def print_results(
     results: List[SearchResult], query: str, method: str = "Semantic"
 ) -> None:
-    """Pretty-print a ranked list of SearchResult objects."""
+    """Print a ranked list of SearchResult objects without box drawing."""
     console.print(
-        Panel(
-            f"[bold cyan]{method} Search[/bold cyan]  ·  Query: [yellow]{query}[/yellow]",
-            expand=False,
-        )
+        f"[bold cyan]{method} Search[/bold cyan] - "
+        f"Query: [yellow]{query}[/yellow]"
     )
 
     if not results:
         console.print("[red]No results found.[/red]")
         return
 
-    table = Table(box=box.ROUNDED, show_lines=True, expand=True)
-    table.add_column("#", style="bold", width=3, justify="right")
-    table.add_column("Score", style="green", width=7, justify="right")
-    table.add_column("Title", style="bold white", min_width=20)
-    table.add_column("Snippet", style="dim", min_width=40)
-
     for r in results:
-        snippet = (r.content or "")[:180].replace("\n", " ") + "…"
-        table.add_row(
-            str(r.rank),
-            f"{r.score:.4f}",
-            r.title or f"doc-{r.doc_id}",
-            snippet,
-        )
-
-    console.print(table)
+        snippet = (r.content or "")[:180].replace("\n", " ")
+        if len(r.content or "") > 180:
+            snippet = snippet.rstrip() + "..."
+        title = r.title or f"doc-{r.doc_id}"
+        console.print(f"{r.rank}. Score: {r.score:.4f}")
+        console.print(f"   Title: {title}")
+        console.print(f"   Snippet: [dim]{snippet}[/dim]")
 
 
 def compare_results(
@@ -59,7 +46,6 @@ def compare_results(
     print_results(semantic_results, query, method="Semantic (pgvector)")
     print_results(classical_results, query, method="Classical (TF-IDF)")
 
-    # Overlap analysis
     sem_ids: set[int] = {r.doc_id for r in semantic_results}
     cls_ids: set[int] = {r.doc_id for r in classical_results}
     overlap: set[int] = sem_ids & cls_ids

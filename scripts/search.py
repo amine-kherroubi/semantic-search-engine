@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phase 3 — Interactive search CLI.
+Phase 3 - Interactive search CLI.
 
 Accepts a query via argument or interactive prompt and shows
 semantic results alongside TF-IDF results for comparison.

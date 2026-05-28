@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# =============================================================================
 # 05_search.sh
 # Run the interactive search CLI (semantic + TF-IDF comparison).
 #
@@ -7,7 +6,6 @@
 #   bash scripts/05_search.sh                         # interactive mode
 #   bash scripts/05_search.sh "your query here"       # single query
 #   bash scripts/05_search.sh "your query" --no-tfidf # semantic only
-# =============================================================================
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

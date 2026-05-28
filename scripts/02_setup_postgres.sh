@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
-# =============================================================================
 # 02_setup_postgres.sh
 # Create the PostgreSQL database and user for the project.
 # Reads from .env if present, otherwise uses defaults.
-# =============================================================================
 set -euo pipefail
 
-echo "Step 2 — PostgreSQL database setup"
+echo "Step 2 - PostgreSQL database setup"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -33,7 +31,7 @@ echo "  User:     $DB_USER"
 
 # Ensure PostgreSQL is running
 if ! pg_isready -h "$DB_HOST" -p "$DB_PORT" -q; then
-    echo "[!] PostgreSQL is not running. Starting …"
+    echo "[!] PostgreSQL is not running. Starting ..."
     sudo service postgresql start
     sleep 2
 fi
@@ -53,5 +51,5 @@ sudo -u postgres psql -d "$DB_NAME" -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAM
 sudo -u postgres psql -d "$DB_NAME" -c "GRANT ALL ON SCHEMA public TO $DB_USER;"
 
 echo ""
-echo "✓ Database '$DB_NAME' ready."
+echo "OK Database '$DB_NAME' ready."
 echo "  Next: run  bash scripts/03_init_schema.sh"

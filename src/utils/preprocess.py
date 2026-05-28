@@ -49,7 +49,7 @@ def chunk_text(text: str, max_tokens: int = 300, overlap: int = 50) -> List[str]
 
 
 def truncate(text: str, max_chars: int = 500) -> str:
-    """Return first max_chars characters followed by '…' if truncated."""
+    """Return first max_chars characters followed by '...' if truncated."""
     if len(text) <= max_chars:
         return text
-    return text[:max_chars].rstrip() + "…"
+    return text[:max_chars].rstrip() + "..."

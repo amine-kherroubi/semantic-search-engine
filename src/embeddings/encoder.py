@@ -51,7 +51,7 @@ def encode_texts(
         batch_size=batch_size,
         show_progress_bar=show_progress,
         convert_to_numpy=True,
-        normalize_embeddings=True,   # unit vectors → cosine sim = dot product
+        normalize_embeddings=True,   # unit vectors -> cosine sim = dot product
     )
     return embeddings.astype(np.float32)
 

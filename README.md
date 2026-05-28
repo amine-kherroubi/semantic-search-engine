@@ -8,9 +8,9 @@ A document retrieval system that finds results by **semantic meaning** rather th
 
 Traditional keyword search fails when a user's phrasing differs from the document's wording. This system addresses that limitation by embedding both documents and queries into a shared vector space using a pre-trained transformer model, enabling retrieval based on conceptual similarity rather than lexical overlap.
 
-**Dataset:** AG News (Hugging Face) — approximately 120,000 English news articles across four categories: World, Sports, Business, and Sci/Tech.
+**Dataset:** AG News (Hugging Face) - approximately 120,000 English news articles across four categories: World, Sports, Business, and Sci/Tech.
 
-**Embedding model:** `all-MiniLM-L6-v2` (Sentence-Transformers) — produces 384-dimensional unit vectors optimised for semantic textual similarity.
+**Embedding model:** `all-MiniLM-L6-v2` (Sentence-Transformers) - produces 384-dimensional unit vectors optimised for semantic textual similarity.
 
 ---
 
@@ -34,54 +34,54 @@ All dependencies are open-source.
 
 ```
 semantic-search-engine/
-│
-├── run_all.sh                    Master setup and pipeline script
-├── requirements.txt              Python dependencies
-├── .env.example                  Environment variable template
-│
-├── scripts/
-│   ├── 01_install_deps.sh        Install system packages, PostgreSQL, pgvector, and Python deps
-│   ├── 02_setup_postgres.sh      Create database and user
-│   ├── 03_init_schema.sh         Apply SQL schema via setup_db.py
-│   ├── 04_ingest.sh              Download dataset, generate embeddings, store in pgvector
-│   ├── 05_search.sh              Interactive search CLI
-│   ├── 06_evaluate.sh            Benchmark evaluation with charts
-│   ├── setup_db.py               Database initialisation script
-│   ├── ingest.py                 Ingestion pipeline
-│   ├── search.py                 Search CLI entry point
-│   └── evaluate.py               Evaluation suite
-│
-├── src/
-│   ├── db/
-│   │   ├── connection.py         SQLAlchemy engine, session context manager, psycopg2 helpers
-│   │   └── models.py             ORM models (Document, Embedding) and CRUD helpers
-│   ├── embeddings/
-│   │   └── encoder.py            Sentence-Transformers wrapper with batching and caching
-│   ├── search/
-│   │   ├── semantic.py           pgvector cosine similarity search
-│   │   └── classical.py         In-memory TF-IDF search engine
-│   └── utils/
-│       ├── preprocess.py         Text cleaning, chunking, and truncation
-│       └── display.py            Rich terminal output for search results
-│
-├── sql/
-│   ├── schema.sql                Extension, tables, IVFFlat index, and view definitions
-│   └── reset.sql                 Drop all tables (destructive)
-│
-├── notebooks/
-│   └── analysis.ipynb            EDA, t-SNE visualisation, and comparative analysis
-│
-├── tests/
-│   └── test_preprocess.py        Unit tests for preprocessing utilities
-│
-└── data/                         Generated outputs (charts, CSVs) — not committed
+|
+|-- run_all.sh                    Master setup and pipeline script
+|-- requirements.txt              Python dependencies
+|-- .env.example                  Environment variable template
+|
+|-- scripts/
+|   |-- 01_install_deps.sh        Install system packages, PostgreSQL, pgvector, and Python deps
+|   |-- 02_setup_postgres.sh      Create database and user
+|   |-- 03_init_schema.sh         Apply SQL schema via setup_db.py
+|   |-- 04_ingest.sh              Download dataset, generate embeddings, store in pgvector
+|   |-- 05_search.sh              Interactive search CLI
+|   |-- 06_evaluate.sh            Benchmark evaluation with charts
+|   |-- setup_db.py               Database initialisation script
+|   |-- ingest.py                 Ingestion pipeline
+|   |-- search.py                 Search CLI entry point
+|   `-- evaluate.py               Evaluation suite
+|
+|-- src/
+|   |-- db/
+|   |   |-- connection.py         SQLAlchemy engine, session context manager, psycopg2 helpers
+|   |   `-- models.py             ORM models (Document, Embedding) and CRUD helpers
+|   |-- embeddings/
+|   |   `-- encoder.py            Sentence-Transformers wrapper with batching and caching
+|   |-- search/
+|   |   |-- semantic.py           pgvector cosine similarity search
+|   |   `-- classical.py         In-memory TF-IDF search engine
+|   `-- utils/
+|       |-- preprocess.py         Text cleaning, chunking, and truncation
+|       `-- display.py            Rich terminal output for search results
+|
+|-- sql/
+|   |-- schema.sql                Extension, tables, IVFFlat index, and view definitions
+|   `-- reset.sql                 Drop all tables (destructive)
+|
+|-- notebooks/
+|   `-- analysis.ipynb            EDA, t-SNE visualisation, and comparative analysis
+|
+|-- tests/
+|   `-- test_preprocess.py        Unit tests for preprocessing utilities
+|
+`-- data/                         Generated outputs (charts, CSVs) - not committed
 ```
 
 ---
 
 ## Setup and Usage
 
-### Option A — Automated (recommended)
+### Option A - Automated (recommended)
 
 Edit the configuration block at the top of `run_all.sh` (database password and ingestion limit), then run:
 
@@ -91,7 +91,7 @@ bash run_all.sh
 
 This executes all five steps in sequence: dependency installation, database creation, schema setup, document ingestion, and evaluation.
 
-### Option B — Step by step
+### Option B - Step by step
 
 ```bash
 # 1. Install system packages, PostgreSQL 16, pgvector, and Python packages
