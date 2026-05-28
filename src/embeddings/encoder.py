@@ -2,6 +2,7 @@
 Text embedding generation using Sentence-Transformers.
 Handles batching and progress tracking.
 """
+
 from __future__ import annotations
 
 import os
@@ -10,7 +11,6 @@ from typing import List
 import numpy as np
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
-from tqdm import tqdm
 
 load_dotenv()
 
@@ -51,7 +51,7 @@ def encode_texts(
         batch_size=batch_size,
         show_progress_bar=show_progress,
         convert_to_numpy=True,
-        normalize_embeddings=True,   # unit vectors -> cosine sim = dot product
+        normalize_embeddings=True,  # unit vectors -> cosine sim = dot product
     )
     return embeddings.astype(np.float32)
 

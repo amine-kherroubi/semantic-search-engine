@@ -5,7 +5,6 @@ Loads all documents into memory and uses scikit-learn TfidfVectorizer.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import List
 
 import numpy as np
