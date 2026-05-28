@@ -59,6 +59,10 @@ class TFIDFSearchEngine:
 
     def search(self, query: str, top_k: int = 10) -> List[SearchResult]:
         """Return top-k results scored by TF-IDF cosine similarity."""
+        if top_k <= 0:
+            raise ValueError("top_k must be a positive integer")
+        if not query.strip():
+            raise ValueError("query must be a non-empty string")
         if self._vectorizer is None:
             raise RuntimeError("Call .build() before .search()")
 

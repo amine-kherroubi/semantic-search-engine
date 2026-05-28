@@ -40,7 +40,14 @@ def semantic_search(
 
     Returns a list of SearchResult sorted by descending similarity.
     """
+    if top_k <= 0:
+        raise ValueError("top_k must be a positive integer")
+    if not query.strip():
+        raise ValueError("query must be a non-empty string")
+
     model = model_name or _MODEL_NAME
+    if not model.strip():
+        raise ValueError("model_name must be a non-empty model name")
     query_vec = encode_query(query, model_name=model)
 
     # pgvector uses <=> for cosine distance (0 = identical, 2 = opposite)

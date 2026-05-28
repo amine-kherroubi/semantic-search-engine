@@ -53,6 +53,9 @@ def parse_args() -> argparse.Namespace:
 
 def load_ag_news(limit: int) -> list[dict]:
     """Download and flatten the AG News dataset."""
+    if limit <= 0:
+        raise ValueError("limit must be a positive integer")
+
     print("[Ingest] Downloading ag_news from Hugging Face ...")
     ds = load_dataset("ag_news", split="train", trust_remote_code=True)
     label_map = {0: "World", 1: "Sports", 2: "Business", 3: "Sci/Tech"}
@@ -73,6 +76,11 @@ def load_ag_news(limit: int) -> list[dict]:
 
 
 def run(limit: int, batch_size: int, model: str) -> None:
+    if batch_size <= 0:
+        raise ValueError("batch_size must be a positive integer")
+    if not model.strip():
+        raise ValueError("model must be a non-empty model name")
+
     docs = load_ag_news(limit)
 
     print("[Ingest] Inserting documents ...")
