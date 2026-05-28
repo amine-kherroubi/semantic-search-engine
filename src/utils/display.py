@@ -18,8 +18,7 @@ def print_results(
 ) -> None:
     """Print a ranked list of SearchResult objects without box drawing."""
     console.print(
-        f"[bold cyan]{method} Search[/bold cyan] - "
-        f"Query: [yellow]{query}[/yellow]"
+        f"[bold cyan]{method} Search[/bold cyan] - Query: [yellow]{query}[/yellow]"
     )
 
     if not results:

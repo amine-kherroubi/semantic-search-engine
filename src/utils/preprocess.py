@@ -34,16 +34,24 @@ def chunk_text(text: str, max_tokens: int = 300, overlap: int = 50) -> List[str]
     Split long text into overlapping word-level chunks.
     This avoids truncation in the embedding model.
     """
+    if max_tokens <= 0:
+        raise ValueError("max_tokens must be positive")
+    if overlap < 0:
+        raise ValueError("overlap must be non-negative")
+    if overlap >= max_tokens:
+        raise ValueError("overlap must be smaller than max_tokens")
+
     words = text.split()
     if len(words) <= max_tokens:
         return [text]
 
     chunks: List[str] = []
-    start = 0
-    while start < len(words):
+    step = max_tokens - overlap
+    for start in range(0, len(words), step):
         end = min(start + max_tokens, len(words))
         chunks.append(" ".join(words[start:end]))
-        start += max_tokens - overlap
+        if end == len(words):
+            break
 
     return chunks
 

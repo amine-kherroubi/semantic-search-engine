@@ -1,6 +1,7 @@
 """Unit tests for text preprocessing utilities."""
 
-import sys, os
+import sys
+import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
@@ -44,3 +45,21 @@ def test_truncate():
 def test_truncate_short():
     text = "hello"
     assert truncate(text, max_chars=500) == "hello"
+
+
+def test_chunk_text_rejects_invalid_max_tokens():
+    try:
+        chunk_text("text", max_tokens=0, overlap=0)
+    except ValueError as exc:
+        assert "max_tokens" in str(exc)
+    else:
+        raise AssertionError("Expected ValueError")
+
+
+def test_chunk_text_rejects_invalid_overlap():
+    try:
+        chunk_text("text", max_tokens=10, overlap=10)
+    except ValueError as exc:
+        assert "overlap" in str(exc)
+    else:
+        raise AssertionError("Expected ValueError")

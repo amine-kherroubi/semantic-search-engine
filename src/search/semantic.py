@@ -8,7 +8,6 @@ import os
 from dataclasses import dataclass
 from typing import List
 
-import numpy as np
 from dotenv import load_dotenv
 from sqlalchemy import text
 

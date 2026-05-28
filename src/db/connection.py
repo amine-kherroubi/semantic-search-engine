@@ -2,6 +2,7 @@
 Database connection utilities.
 Uses SQLAlchemy for ORM access and psycopg2 for raw queries.
 """
+
 from __future__ import annotations
 
 import os
@@ -11,24 +12,38 @@ from typing import Generator
 import psycopg2
 import psycopg2.extras
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy import URL, create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
 load_dotenv()
 
 
-def _dsn() -> str:
-    return (
-        f"postgresql://{os.getenv('DB_USER', 'postgres')}:"
-        f"{os.getenv('DB_PASSWORD', 'postgres')}@"
-        f"{os.getenv('DB_HOST', 'localhost')}:"
-        f"{os.getenv('DB_PORT', '5432')}/"
-        f"{os.getenv('DB_NAME', 'semantic_search')}"
+def _db_config() -> dict[str, str | int]:
+    """Return database settings from the environment."""
+    return {
+        "host": os.getenv("DB_HOST", "localhost"),
+        "port": int(os.getenv("DB_PORT", "5432")),
+        "database": os.getenv("DB_NAME", "semantic_search"),
+        "username": os.getenv("DB_USER", "postgres"),
+        "password": os.getenv("DB_PASSWORD", "postgres"),
+    }
+
+
+def _sqlalchemy_url() -> URL:
+    """Return a SQLAlchemy URL with credentials escaped correctly."""
+    config = _db_config()
+    return URL.create(
+        drivername="postgresql+psycopg2",
+        username=str(config["username"]),
+        password=str(config["password"]),
+        host=str(config["host"]),
+        port=int(config["port"]),
+        database=str(config["database"]),
     )
 
 
-# SQLAlchemy engine (reused across the app)
-engine = create_engine(_dsn(), pool_pre_ping=True)
+# SQLAlchemy engine reused across the app.
+engine = create_engine(_sqlalchemy_url(), pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine)
 
 
@@ -48,8 +63,15 @@ def get_session() -> Generator[Session, None, None]:
 
 @contextmanager
 def get_raw_connection() -> Generator[psycopg2.extensions.connection, None, None]:
-    """Yield a raw psycopg2 connection (useful for COPY and bulk inserts)."""
-    conn = psycopg2.connect(_dsn())
+    """Yield a raw psycopg2 connection for SQL scripts and bulk operations."""
+    config = _db_config()
+    conn = psycopg2.connect(
+        host=config["host"],
+        port=config["port"],
+        dbname=config["database"],
+        user=config["username"],
+        password=config["password"],
+    )
     try:
         yield conn
         conn.commit()
