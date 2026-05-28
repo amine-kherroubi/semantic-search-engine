@@ -2,6 +2,7 @@
 Classical TF-IDF keyword search for side-by-side comparison.
 Loads all documents into memory and uses scikit-learn TfidfVectorizer.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -24,11 +25,11 @@ class TFIDFSearchEngine:
 
     def __init__(self) -> None:
         self._vectorizer: TfidfVectorizer | None = None
-        self._matrix = None          # sparse (n_docs, vocab)
-        self._doc_ids:  list[int]  = []
-        self._titles:   list[str]  = []
-        self._contents: list[str]  = []
-        self._sources:  list[str]  = []
+        self._matrix: np.ndarray | None = None  # sparse (n_docs, vocab)
+        self._doc_ids: list[int] = []
+        self._titles: list[str | None] = []
+        self._contents: list[str] = []
+        self._sources: list[str | None] = []
 
     def build(self) -> "TFIDFSearchEngine":
         """Fetch all documents from DB and fit the TF-IDF matrix."""
@@ -39,10 +40,10 @@ class TFIDFSearchEngine:
         if not rows:
             raise RuntimeError("No documents found. Run the ingestion pipeline first.")
 
-        self._doc_ids  = [r.id      for r in rows]
-        self._titles   = [r.title   for r in rows]
+        self._doc_ids = [r.id for r in rows]
+        self._titles = [r.title for r in rows]
         self._contents = [r.content for r in rows]
-        self._sources  = [r.source  for r in rows]
+        self._sources = [r.source for r in rows]
 
         self._vectorizer = TfidfVectorizer(
             sublinear_tf=True,
@@ -52,7 +53,9 @@ class TFIDFSearchEngine:
             ngram_range=(1, 2),
         )
         self._matrix = self._vectorizer.fit_transform(self._contents)
-        print(f"[TF-IDF] Built index: {len(rows)} docs, vocab={self._matrix.shape[1]:,}")
+        print(
+            f"[TF-IDF] Built index: {len(rows)} docs, vocab={self._matrix.shape[1]:,}"
+        )
         return self
 
     def search(self, query: str, top_k: int = 10) -> List[SearchResult]:

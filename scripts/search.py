@@ -9,6 +9,7 @@ Usage:
     python scripts/search.py --query "machine learning optimization"
     python scripts/search.py          # interactive mode
 """
+
 from __future__ import annotations
 
 import argparse
@@ -23,9 +24,11 @@ from src.utils import compare_results, console
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Search the semantic index.")
-    p.add_argument("--query",  type=str,  default=None, help="Query string")
-    p.add_argument("--top-k",  type=int,  default=10,   help="Number of results (default: 10)")
-    p.add_argument("--no-tfidf", action="store_true",   help="Skip TF-IDF comparison")
+    p.add_argument("--query", type=str, default=None, help="Query string")
+    p.add_argument(
+        "--top-k", type=int, default=10, help="Number of results (default: 10)"
+    )
+    p.add_argument("--no-tfidf", action="store_true", help="Skip TF-IDF comparison")
     return p.parse_args()
 
 
@@ -38,6 +41,7 @@ def run(query: str, top_k: int, with_tfidf: bool) -> None:
         compare_results(sem_results, cls_results, query)
     else:
         from src.utils import print_results
+
         print_results(sem_results, query, method="Semantic (pgvector)")
 
 
@@ -49,7 +53,9 @@ if __name__ == "__main__":
     if args.query:
         run(args.query, top_k, with_tfidf)
     else:
-        console.print("[bold green]Semantic Search Engine[/bold green]  (Ctrl-C to quit)\n")
+        console.print(
+            "[bold green]Semantic Search Engine[/bold green]  (Ctrl-C to quit)\n"
+        )
         while True:
             try:
                 query = input("Query> ").strip()

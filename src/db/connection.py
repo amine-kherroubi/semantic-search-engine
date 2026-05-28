@@ -47,7 +47,7 @@ def get_session() -> Generator[Session, None, None]:
 
 
 @contextmanager
-def get_raw_connection():
+def get_raw_connection() -> Generator[psycopg2.extensions.connection, None, None]:
     """Yield a raw psycopg2 connection (useful for COPY and bulk inserts)."""
     conn = psycopg2.connect(_dsn())
     try:

@@ -17,7 +17,7 @@ from src.utils import console
 
 
 def main() -> None:
-    console.print("[bold]Checking database connection …[/bold]")
+    console.print("[bold]Checking database connection...[/bold]")
     if not test_connection():
         console.print("[red]Cannot reach the database. Check your .env settings.[/red]")
         sys.exit(1)
@@ -26,12 +26,30 @@ def main() -> None:
     schema_path = Path(__file__).parent.parent / "sql" / "schema.sql"
     sql = schema_path.read_text()
 
+    # Split by semicolon to execute statements individually.
+    # We ignore empty statements caused by trailing semicolons.
+    statements = [s.strip() for s in sql.split(";") if s.strip()]
+
     with get_raw_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute(sql)
+            # 1. Handle extension separately
+            try:
+                cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+                conn.commit()
+            except Exception as e:
+                console.print(f"[yellow]Note: Could not create extension (it may already exist or you lack superuser privileges): {e}[/yellow]")
+                conn.rollback()
+            
+            # 2. Handle schema
+            for statement in statements:
+                try:
+                    cur.execute(statement)
+                except Exception as e:
+                    console.print(f"[red]Error executing statement: {statement[:50]}... - {e}[/red]")
+                    raise
 
     console.print("[green]✓ Schema applied.[/green]")
-    console.print("Run  [bold]python scripts/ingest.py[/bold]  to load documents.")
+    console.print("Run [bold]python scripts/ingest.py[/bold] to load documents.")
 
 
 if __name__ == "__main__":

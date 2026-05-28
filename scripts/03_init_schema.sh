@@ -5,9 +5,7 @@
 # =============================================================================
 set -euo pipefail
 
-echo "════════════════════════════════════════"
-echo "  Step 3 — Apply database schema"
-echo "════════════════════════════════════════"
+echo "Step 3 — Apply database schema"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"

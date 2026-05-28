@@ -1,6 +1,7 @@
 """
 Semantic search using pgvector cosine similarity.
 """
+
 from __future__ import annotations
 
 import os
@@ -26,7 +27,7 @@ class SearchResult:
     title: str | None
     content: str
     source: str | None
-    score: float          # cosine similarity  (higher = more similar)
+    score: float  # cosine similarity  (higher = more similar)
     rank: int
 
 
@@ -45,8 +46,7 @@ def semantic_search(
 
     # pgvector uses <=> for cosine distance (0 = identical, 2 = opposite)
     # similarity = 1 - distance
-    sql = text(
-        """
+    sql = text("""
         SELECT
             d.id,
             d.title,
@@ -58,8 +58,7 @@ def semantic_search(
         WHERE e.model_name = :model
         ORDER BY e.embedding <=> CAST(:vec AS vector)
         LIMIT :k;
-        """
-    )
+        """)
 
     vec_str = "[" + ",".join(f"{v:.8f}" for v in query_vec.tolist()) + "]"
 

@@ -6,9 +6,7 @@
 # =============================================================================
 set -euo pipefail
 
-echo "════════════════════════════════════════"
-echo "  Step 2 — PostgreSQL database setup"
-echo "════════════════════════════════════════"
+echo "Step 2 — PostgreSQL database setup"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"

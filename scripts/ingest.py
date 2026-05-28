@@ -9,6 +9,7 @@ everything in PostgreSQL + pgvector.
 Usage:
     python scripts/ingest.py [--limit N] [--batch-size N]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -17,6 +18,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
+from typing import Any, cast
 from datasets import load_dataset
 from tqdm import tqdm
 
@@ -28,13 +30,24 @@ _MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Ingest documents into the semantic search DB.")
-    p.add_argument("--limit",      type=int, default=5000,
-                   help="Max number of documents to ingest (default: 5000)")
-    p.add_argument("--batch-size", type=int, default=64,
-                   help="Embedding batch size (default: 64)")
-    p.add_argument("--model",      type=str, default=_MODEL,
-                   help=f"Sentence-transformer model (default: {_MODEL})")
+    p = argparse.ArgumentParser(
+        description="Ingest documents into the semantic search DB."
+    )
+    p.add_argument(
+        "--limit",
+        type=int,
+        default=5000,
+        help="Max number of documents to ingest (default: 5000)",
+    )
+    p.add_argument(
+        "--batch-size", type=int, default=64, help="Embedding batch size (default: 64)"
+    )
+    p.add_argument(
+        "--model",
+        type=str,
+        default=_MODEL,
+        help=f"Sentence-transformer model (default: {_MODEL})",
+    )
     return p.parse_args()
 
 
@@ -45,13 +58,16 @@ def load_ag_news(limit: int) -> list[dict]:
     label_map = {0: "World", 1: "Sports", 2: "Business", 3: "Sci/Tech"}
 
     rows = []
-    for item in ds.select(range(min(limit, len(ds)))):
-        rows.append({
-            "title":    item["text"].split(".")[0][:120],   # first sentence as title
-            "content":  clean_text(item["text"]),
-            "source":   "ag_news",
-            "metadata": {"label": label_map.get(item["label"], "Unknown")},
-        })
+    for item_obj in ds.select(range(min(limit, len(ds)))):
+        item = cast(dict[str, Any], item_obj)
+        rows.append(
+            {
+                "title": item["text"].split(".")[0][:120],  # first sentence as title
+                "content": clean_text(item["text"]),
+                "source": "ag_news",
+                "metadata": {"label": label_map.get(item["label"], "Unknown")},
+            }
+        )
     print(f"[Ingest] Loaded {len(rows):,} documents.")
     return rows
 
