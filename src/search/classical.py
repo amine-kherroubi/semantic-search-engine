@@ -5,8 +5,6 @@ Loads all documents into memory and uses scikit-learn TfidfVectorizer.
 
 from __future__ import annotations
 
-from typing import List
-
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -57,7 +55,7 @@ class TFIDFSearchEngine:
         )
         return self
 
-    def search(self, query: str, top_k: int = 10) -> List[SearchResult]:
+    def search(self, query: str, top_k: int = 10) -> list[SearchResult]:
         """Return top-k results scored by TF-IDF cosine similarity."""
         if top_k <= 0:
             raise ValueError("top_k must be a positive integer")

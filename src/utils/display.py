@@ -4,8 +4,6 @@ Terminal display helpers using rich.
 
 from __future__ import annotations
 
-from typing import List
-
 from rich.console import Console
 
 from src.search.semantic import SearchResult
@@ -14,7 +12,7 @@ console = Console()
 
 
 def print_results(
-    results: List[SearchResult], query: str, method: str = "Semantic"
+    results: list[SearchResult], query: str, method: str = "Semantic"
 ) -> None:
     """Print a ranked list of SearchResult objects without box drawing."""
     console.print(
@@ -36,8 +34,8 @@ def print_results(
 
 
 def compare_results(
-    semantic_results: List[SearchResult],
-    classical_results: List[SearchResult],
+    semantic_results: list[SearchResult],
+    classical_results: list[SearchResult],
     query: str,
 ) -> None:
     """Print semantic and TF-IDF results side by side."""

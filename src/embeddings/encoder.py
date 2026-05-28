@@ -6,7 +6,6 @@ Handles batching and progress tracking.
 from __future__ import annotations
 
 import os
-from typing import List
 
 import numpy as np
 from dotenv import load_dotenv
@@ -34,7 +33,7 @@ def get_model(model_name: str | None = None) -> SentenceTransformer:
 
 
 def encode_texts(
-    texts: List[str],
+    texts: list[str],
     model_name: str | None = None,
     batch_size: int = _BATCH_SIZE,
     show_progress: bool = True,

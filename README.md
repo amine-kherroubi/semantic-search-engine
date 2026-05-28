@@ -38,7 +38,7 @@ semantic-search-engine/
 |-- run_all.sh                    Master setup and pipeline script
 |-- requirements.txt              Python dependencies
 |-- .env.example                  Environment variable template
-|-- TECHNICAL_REPORT.md           Structured technical report
+|-- report.md                     Structured technical report
 |
 |-- scripts/
 |   |-- 01_install_deps.sh        Install system packages, PostgreSQL, pgvector, and Python deps
@@ -157,7 +157,7 @@ python scripts/search.py --query "space mission" --top-k 20
 
 ## Technical Report
 
-The technical report is available in `TECHNICAL_REPORT.md`. It follows the required structure: introduction, state of the art, methodology, implementation details, results, critical discussion, and conclusion.
+The technical report is available in `report.md`. It follows the required structure: introduction, state of the art, methodology, implementation details, results, critical discussion, and conclusion.
 
 ---
 

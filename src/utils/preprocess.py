@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from typing import List
 
 
 def clean_text(text: str) -> str:
@@ -29,7 +28,7 @@ def clean_text(text: str) -> str:
     return text.strip()
 
 
-def chunk_text(text: str, max_tokens: int = 300, overlap: int = 50) -> List[str]:
+def chunk_text(text: str, max_tokens: int = 300, overlap: int = 50) -> list[str]:
     """
     Split long text into overlapping word-level chunks.
     This avoids truncation in the embedding model.
@@ -45,7 +44,7 @@ def chunk_text(text: str, max_tokens: int = 300, overlap: int = 50) -> List[str]
     if len(words) <= max_tokens:
         return [text]
 
-    chunks: List[str] = []
+    chunks: list[str] = []
     step = max_tokens - overlap
     for start in range(0, len(words), step):
         end = min(start + max_tokens, len(words))

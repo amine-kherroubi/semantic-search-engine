@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from typing import List
 
 from dotenv import load_dotenv
 from sqlalchemy import text
@@ -34,7 +33,7 @@ def semantic_search(
     query: str,
     top_k: int = TOP_K,
     model_name: str | None = None,
-) -> List[SearchResult]:
+) -> list[SearchResult]:
     """
     Encode *query* and retrieve the top-k most similar documents from pgvector.
 
