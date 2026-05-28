@@ -52,6 +52,9 @@ def timed_search(fn, *args, **kwargs):
 
 
 def run_evaluation(top_k: int = 10) -> None:
+    if top_k <= 0:
+        raise ValueError("top_k must be a positive integer")
+
     console.print("[bold]Building TF-IDF index ...[/bold]")
     tfidf = TFIDFSearchEngine().build()
 

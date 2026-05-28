@@ -28,7 +28,14 @@ def main() -> None:
 
     # Split by semicolon to execute statements individually.
     # We ignore empty statements caused by trailing semicolons.
+    # Extension creation is handled explicitly below so privilege failures
+    # can be reported without immediately re-running the same statement.
     statements = [s.strip() for s in sql.split(";") if s.strip()]
+    schema_statements = [
+        statement
+        for statement in statements
+        if not statement.lower().startswith("create extension")
+    ]
 
     with get_raw_connection() as conn:
         with conn.cursor() as cur:
@@ -45,7 +52,7 @@ def main() -> None:
                 conn.rollback()
 
             # 2. Handle schema
-            for statement in statements:
+            for statement in schema_statements:
                 try:
                     cur.execute(statement)
                 except Exception as e:
