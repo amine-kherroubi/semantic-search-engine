@@ -83,7 +83,7 @@ def run_evaluation(top_k: int = 10) -> None:
 
     df = pd.DataFrame(rows)
     console.print("\n[bold cyan]Evaluation Results[/bold cyan]")
-    print(tabulate(df, headers="keys", tablefmt="plain", showindex=False))
+    print(tabulate(df, headers="keys", tablefmt="plain", showindex=False))  # type: ignore
 
     # Save CSV
     csv_path = OUTPUT_DIR / "evaluation_results.csv"

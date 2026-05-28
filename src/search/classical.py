@@ -49,9 +49,9 @@ class TFIDFSearchEngine:
             stop_words="english",
             ngram_range=(1, 2),
         )
-        self._matrix = self._vectorizer.fit_transform(self._contents)
+        self._matrix = self._vectorizer.fit_transform(self._contents)  # type: ignore
         print(
-            f"[TF-IDF] Built index: {len(rows)} docs, vocab={self._matrix.shape[1]:,}"
+            f"[TF-IDF] Built index: {len(rows)} docs, vocab={self._matrix.shape[1]:,}"  # type: ignore
         )
         return self
 

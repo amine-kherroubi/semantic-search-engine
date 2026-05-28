@@ -10,7 +10,6 @@ from contextlib import contextmanager
 from typing import Generator
 
 import psycopg2
-import psycopg2.extras
 from dotenv import load_dotenv
 from sqlalchemy import URL, create_engine
 from sqlalchemy.orm import Session, sessionmaker

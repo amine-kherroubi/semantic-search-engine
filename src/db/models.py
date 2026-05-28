@@ -75,7 +75,7 @@ def insert_documents(session, rows: list[dict[str, Any]]) -> list[int]:
     ]
     session.add_all(objs)
     session.flush()  # populate .id without committing
-    return [o.id for o in objs]
+    return [o.id for o in objs]  # type: ignore
 
 
 def insert_embeddings(session, records: list[dict[str, Any]]) -> None:
