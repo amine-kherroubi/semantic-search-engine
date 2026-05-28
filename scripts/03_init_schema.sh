@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# =============================================================================
 # 03_init_schema.sh
 # Apply the SQL schema (enable pgvector, create tables & indexes).
-# =============================================================================
 set -euo pipefail
 
-echo "Step 3 — Apply database schema"
+echo "Step 3 - Apply database schema"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -16,5 +14,5 @@ source "$PROJECT_ROOT/.venv/bin/activate"
 python "$PROJECT_ROOT/scripts/setup_db.py"
 
 echo ""
-echo "✓ Schema applied."
+echo "OK Schema applied."
 echo "  Next: run  bash scripts/04_ingest.sh"

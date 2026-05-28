@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phase 4 — Validation & Critical Analysis.
+Phase 4 - Validation & Critical Analysis.
 
 Runs a fixed set of test queries, measures response times, computes
 overlap between semantic and TF-IDF results, and produces a
@@ -50,7 +50,7 @@ def timed_search(fn, *args, **kwargs):
 
 
 def run_evaluation(top_k: int = 10) -> None:
-    console.print("[bold]Building TF-IDF index …[/bold]")
+    console.print("[bold]Building TF-IDF index ...[/bold]")
     tfidf = TFIDFSearchEngine().build()
 
     rows = []
@@ -76,16 +76,16 @@ def run_evaluation(top_k: int = 10) -> None:
 
     df = pd.DataFrame(rows)
     console.print("\n[bold cyan]Evaluation Results[/bold cyan]")
-    print(tabulate(df, headers="keys", tablefmt="rounded_outline", showindex=False))
+    print(tabulate(df, headers="keys", tablefmt="plain", showindex=False))
 
-    # ── save CSV ──────────────────────────────────────────────────────────
+    # Save CSV
     csv_path = OUTPUT_DIR / "evaluation_results.csv"
     df.to_csv(csv_path, index=False)
     console.print(f"\n[green]CSV saved:[/green] {csv_path}")
 
-    # ── charts ────────────────────────────────────────────────────────────
+    # Charts
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
-    fig.suptitle("Semantic vs TF-IDF Search — Evaluation", fontsize=14, fontweight="bold")
+    fig.suptitle("Semantic vs TF-IDF Search - Evaluation", fontsize=14, fontweight="bold")
 
     # 1. Latency comparison
     ax = axes[0]

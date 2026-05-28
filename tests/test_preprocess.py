@@ -37,8 +37,8 @@ def test_chunk_text_long():
 def test_truncate():
     text = "a" * 600
     result = truncate(text, max_chars=500)
-    assert result.endswith("…")
-    assert len(result) <= 501
+    assert result.endswith("...")
+    assert len(result) <= 503
 
 
 def test_truncate_short():

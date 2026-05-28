@@ -1,20 +1,16 @@
 #!/usr/bin/env bash
-# =============================================================================
 # 01_install_deps.sh
 # Install system packages, PostgreSQL, pgvector, and Python dependencies.
 # Run once on a fresh Ubuntu machine.
-# =============================================================================
 set -euo pipefail
 
-echo "════════════════════════════════════════"
-echo "  Step 1 — System & Python dependencies"
-echo "════════════════════════════════════════"
+echo "  Step 1 - System & Python dependencies"
 
-# ── System packages ────────────────────────────────────────────────────────
-echo "[1/4] Updating apt …"
+# System packages
+echo "[1/4] Updating apt ..."
 sudo apt-get update -qq
 
-echo "[2/4] Installing PostgreSQL 16 + dev headers …"
+echo "[2/4] Installing PostgreSQL 16 + dev headers ..."
 sudo apt-get install -y --no-install-recommends \
     postgresql-16 \
     postgresql-server-dev-16 \
@@ -26,8 +22,8 @@ sudo apt-get install -y --no-install-recommends \
     python3-pip \
     python3-venv
 
-# ── pgvector ──────────────────────────────────────────────────────────────
-echo "[3/4] Building & installing pgvector …"
+# pgvector
+echo "[3/4] Building & installing pgvector ..."
 PGVEC_DIR="/tmp/pgvector"
 if [ -d "$PGVEC_DIR" ]; then
     rm -rf "$PGVEC_DIR"
@@ -39,8 +35,8 @@ sudo make install
 cd -
 echo "  pgvector built."
 
-# ── Python virtual environment ────────────────────────────────────────────
-echo "[4/4] Creating Python venv and installing packages …"
+# Python virtual environment
+echo "[4/4] Creating Python venv and installing packages ..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
@@ -52,5 +48,5 @@ pip install --upgrade pip wheel -q
 pip install -r "$PROJECT_ROOT/requirements.txt"
 
 echo ""
-echo "✓ All dependencies installed."
+echo "OK All dependencies installed."
 echo "  Activate the venv with:  source .venv/bin/activate"

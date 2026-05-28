@@ -47,24 +47,24 @@ Choose any public dataset containing **at least 1,000 text documents**. Suggeste
 
 ## Deliverables & Phases
 
-### Phase 1 — Analysis & Design
+### Phase 1 - Analysis & Design
 - Problem statement and dataset justification
 - System architecture diagram
 - Choice of vectorization method with rationale
 - Database schema
 
-### Phase 2 — Vector Database Implementation
+### Phase 2 - Vector Database Implementation
 - Text preprocessing pipeline
 - Embedding generation
 - Vector storage and indexing in pgvector
 
-### Phase 3 — Semantic Search
+### Phase 3 - Semantic Search
 - Query vectorization at runtime
 - Similarity computation (cosine or L2 distance)
 - Top-*k* document retrieval
 - Side-by-side comparison with a classical search method (TF-IDF or keyword)
 
-### Phase 4 — Validation & Critical Analysis
+### Phase 4 - Validation & Critical Analysis
 - Functional test cases
 - Performance analysis
 - Discussion of system limitations
@@ -78,7 +78,7 @@ Submit a complete project folder containing:
 
 1. **Documented source code**
 2. **SQL scripts** or pgvector configuration files
-3. **Technical report (10–15 pages)** structured as follows:
+3. **Technical report (10-15 pages)** structured as follows:
    - Introduction
    - State of the art (vector databases)
    - Methodology

@@ -30,7 +30,7 @@ class Document(Base):
 
     def __repr__(self) -> str:
         snippet = (self.content or "")[:60].replace("\n", " ")
-        return f"<Document id={self.id} title={self.title!r} content={snippet!r}…>"
+        return f"<Document id={self.id} title={self.title!r} content={snippet!r}...>"
 
 
 class Embedding(Base):
@@ -48,7 +48,7 @@ class Embedding(Base):
         return f"<Embedding id={self.id} doc_id={self.doc_id} model={self.model_name!r}>"
 
 
-# ── CRUD helpers ─────────────────────────────────────────────────────────────
+# CRUD helpers
 
 def insert_documents(session, rows: list[dict[str, Any]]) -> list[int]:
     """
