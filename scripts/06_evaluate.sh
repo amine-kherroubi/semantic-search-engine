@@ -4,7 +4,7 @@
 # Outputs CSV and PNG charts to data/
 set -euo pipefail
 
-echo "  Step 6 - Evaluation & Analysis"
+echo "  Step 5 - Evaluation & Analysis"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"

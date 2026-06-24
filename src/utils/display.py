@@ -4,9 +4,12 @@ Terminal display helpers using rich.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from rich.console import Console
 
-from src.search.semantic import SearchResult
+if TYPE_CHECKING:
+    from src.search.semantic import SearchResult
 
 console = Console()
 

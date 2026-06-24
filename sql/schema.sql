@@ -1,29 +1,29 @@
-CREATE EXTENSION IF NOT EXISTS vector;
+create extension if not exists vector;
 
-CREATE TABLE IF NOT EXISTS documents (
-    id          SERIAL PRIMARY KEY,
-    title       TEXT,
-    content     TEXT NOT NULL,
-    source      TEXT,
-    metadata    JSONB DEFAULT '{}',
-    created_at  TIMESTAMPTZ DEFAULT NOW()
+create table if not exists documents (
+    id          serial primary key,
+    title       text,
+    content     text not null,
+    source      text,
+    metadata    jsonb default '{}',
+    created_at  timestamptz default now()
 );
 
-CREATE TABLE IF NOT EXISTS embeddings (
-    id          SERIAL PRIMARY KEY,
-    doc_id      INTEGER NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
-    model_name  TEXT NOT NULL,
-    embedding   VECTOR(384) NOT NULL,
-    created_at  TIMESTAMPTZ DEFAULT NOW()
+create table if not exists embeddings (
+    id          serial primary key,
+    doc_id      integer not null references documents(id) on delete cascade,
+    model_name  text not null,
+    embedding   vector(384) not null,
+    created_at  timestamptz default now()
 );
 
-CREATE INDEX IF NOT EXISTS embeddings_ivfflat_idx
-    ON embeddings
-    USING ivfflat (embedding vector_cosine_ops)
-    WITH (lists = 100);
+create index if not exists embeddings_ivfflat_idx
+    on embeddings
+    using ivfflat (embedding vector_cosine_ops)
+    with (lists = 100);
 
-CREATE OR REPLACE VIEW documents_with_embeddings AS
-SELECT
+create or replace view documents_with_embeddings as
+select
     d.id,
     d.title,
     d.content,
@@ -31,5 +31,5 @@ SELECT
     d.metadata,
     e.embedding,
     e.model_name
-FROM documents d
-JOIN embeddings e ON e.doc_id = d.id;
+from documents d
+join embeddings e on e.doc_id = d.id;

@@ -8,10 +8,10 @@ from __future__ import annotations
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from sqlalchemy import text
 
 from src.db.connection import get_session
 from src.search.semantic import SearchResult  # reuse same dataclass
-from sqlalchemy import text
 
 
 class TFIDFSearchEngine:
@@ -22,7 +22,7 @@ class TFIDFSearchEngine:
 
     def __init__(self) -> None:
         self._vectorizer: TfidfVectorizer | None = None
-        self._matrix: np.ndarray | None = None  # sparse (n_docs, vocab)
+        self._matrix = None  # scipy sparse matrix of shape (n_docs, vocab_size)
         self._doc_ids: list[int] = []
         self._titles: list[str | None] = []
         self._contents: list[str] = []

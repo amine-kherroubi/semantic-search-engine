@@ -22,7 +22,12 @@ from typing import Any, cast
 from datasets import load_dataset
 from tqdm import tqdm
 
-from src.db import get_session, get_raw_connection, insert_documents, insert_embeddings
+from src.db import (
+    get_session,
+    get_autocommit_connection,
+    insert_documents,
+    insert_embeddings,
+)
 from src.embeddings import encode_texts
 from src.utils import clean_text, chunk_text
 
@@ -78,7 +83,9 @@ def load_ag_news(limit: int) -> list[dict]:
                     "metadata": meta,
                 }
             )
-    print(f"[Ingest] Loaded {len(rows):,} document chunks from {min(limit, len(ds)):,} articles.")
+    print(
+        f"[Ingest] Loaded {len(rows):,} document chunks from {min(limit, len(ds)):,} articles."
+    )
     return rows
 
 
@@ -116,11 +123,15 @@ def run(limit: int, batch_size: int, model: str) -> None:
     # Prompt the PostgreSQL query planner to use the IVFFlat index.
     # Without VACUUM ANALYZE the planner may choose a sequential scan because
     # the table statistics are stale immediately after a bulk insert.
+    # VACUUM cannot run inside a transaction, so we use get_autocommit_connection()
+    # which returns a psycopg2 connection with autocommit already enabled.
     print("[Ingest] Running VACUUM ANALYZE to update planner statistics ...")
-    with get_raw_connection() as conn:
-        conn.autocommit = True
-        with conn.cursor() as cur:
+    vac_conn = get_autocommit_connection()
+    try:
+        with vac_conn.cursor() as cur:
             cur.execute("VACUUM ANALYZE embeddings;")
+    finally:
+        vac_conn.close()
     print("[Ingest] VACUUM ANALYZE complete.")
 
 

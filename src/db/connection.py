@@ -91,3 +91,26 @@ def test_connection() -> bool:
     except Exception as exc:
         print(f"[DB] Connection failed: {exc}")
         return False
+
+
+def get_autocommit_connection() -> psycopg2.extensions.connection:
+    """
+    Return a raw psycopg2 connection with autocommit enabled.
+
+    Use this for statements that must run outside a transaction block, such as
+    VACUUM, CREATE DATABASE, or CREATE INDEX CONCURRENTLY.  The caller is
+    responsible for closing the connection (use a try/finally block).
+
+    Unlike get_raw_connection(), this is not a context manager: autocommit
+    connections have no meaningful commit/rollback semantics.
+    """
+    config = _db_config()
+    conn = psycopg2.connect(
+        host=config["host"],
+        port=config["port"],
+        dbname=config["database"],
+        user=config["username"],
+        password=config["password"],
+    )
+    conn.autocommit = True
+    return conn

@@ -18,6 +18,14 @@ from __future__ import annotations
 
 import os
 
+import numpy as np
+from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
+
+# Load .env first so that CUDA_VISIBLE_DEVICES (and all other settings) are
+# already in os.environ before we inspect them below.
+load_dotenv()
+
 # Suppress PyTorch's CUDA driver version warning.
 # The warning fires when PyTorch detects a GPU but the system NVIDIA driver is
 # too old to be used (driver < 525 for CUDA 12). Setting CUDA_VISIBLE_DEVICES=""
@@ -26,12 +34,6 @@ import os
 # is updated to a compatible version.
 if not os.environ.get("CUDA_VISIBLE_DEVICES"):
     os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
-
-import numpy as np
-from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
-
-load_dotenv()
 
 _MODEL_NAME = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 _BATCH_SIZE = int(os.getenv("BATCH_SIZE", "64"))

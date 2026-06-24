@@ -85,22 +85,29 @@ semantic-search-engine/
 
 ### Option A - Automated (recommended)
 
-Before running, open `run_all.sh` and edit the CONFIG block at the top:
+**Before running, you must create and configure `.env` manually.** The script reads it but will never create or overwrite it for you.
 
 ```bash
-# CONFIG - edit these values
-DB_PASSWORD="postgres"   # change this!
-INGEST_LIMIT=5000
-HF_TOKEN=""              # optional — paste your HF token here (see Configuration below)
+# 1. Create your environment file from the template
+cp .env.example .env
+
+# 2. Open it and set your values — at minimum, change DB_PASSWORD
+nano .env
 ```
 
-`run_all.sh` automatically generates `.env` from these values, so **do not** create `.env` manually when using Option A — it will be overwritten. Then run:
+Then run the master script:
 
 ```bash
 bash run_all.sh
 ```
 
-This executes all six steps in sequence: dependency installation, database creation, schema setup, document ingestion, evaluation, and a summary.
+This executes all five steps in sequence: dependency installation, database creation, schema setup, document ingestion, and evaluation. The script will exit immediately with a clear error message if `.env` is missing.
+
+You can override `INGEST_LIMIT` and `BATCH_SIZE` at the command line without touching `.env`:
+
+```bash
+INGEST_LIMIT=20000 BATCH_SIZE=128 bash run_all.sh
+```
 
 ### Option B - Step by step
 
@@ -121,36 +128,37 @@ bash scripts/03_init_schema.sh
 # 5. Download AG News and ingest documents with embeddings
 LIMIT=5000 bash scripts/04_ingest.sh
 
-# 6. Search
-bash scripts/05_search.sh "machine learning breakthroughs"
-
-# 7. Run the evaluation suite
+# 6. Run the evaluation suite
 bash scripts/06_evaluate.sh
+
+# 7. Search interactively (or pass a query directly)
+bash scripts/05_search.sh
+bash scripts/05_search.sh "machine learning breakthroughs"
 ```
 
 ---
 
 ## Configuration
 
-Settings are read from a `.env` file at the project root. Copy `.env.example` to get started:
+All settings are read from a `.env` file at the project root. **This file must be created manually before running any script — it is never generated or overwritten automatically.** Copy the template and fill in your values:
 
 ```bash
 cp .env.example .env
 nano .env
 ```
 
-| Variable               | Default           | Description                                                   |
-| ---------------------- | ----------------- | ------------------------------------------------------------- |
-| `DB_HOST`              | localhost         | PostgreSQL host                                               |
-| `DB_PORT`              | 5432              | PostgreSQL port                                               |
-| `DB_NAME`              | semantic_search   | Database name                                                 |
-| `DB_USER`              | postgres          | Database user                                                 |
-| `DB_PASSWORD`          | postgres          | Database password                                             |
-| `EMBEDDING_MODEL`      | all-MiniLM-L6-v2 | Sentence-Transformers model identifier                        |
-| `TOP_K`                | 10                | Default number of results returned                            |
-| `BATCH_SIZE`           | 64                | Embedding batch size during ingestion                         |
-| `HF_TOKEN`             | _(unset)_         | Hugging Face API token — see below                            |
-| `CUDA_VISIBLE_DEVICES` | _(unset)_         | Set to `""` to force CPU and silence CUDA warnings — see below |
+| Variable               | Default          | Description                                                    |
+| ---------------------- | ---------------- | -------------------------------------------------------------- |
+| `DB_HOST`              | localhost        | PostgreSQL host                                                |
+| `DB_PORT`              | 5432             | PostgreSQL port                                                |
+| `DB_NAME`              | semantic_search  | Database name                                                  |
+| `DB_USER`              | postgres         | Database user                                                  |
+| `DB_PASSWORD`          | postgres         | Database password                                              |
+| `EMBEDDING_MODEL`      | all-MiniLM-L6-v2 | Sentence-Transformers model identifier                         |
+| `TOP_K`                | 10               | Default number of results returned                             |
+| `BATCH_SIZE`           | 64               | Embedding batch size during ingestion                          |
+| `HF_TOKEN`             | _(unset)_        | Hugging Face API token — see below                             |
+| `CUDA_VISIBLE_DEVICES` | _(unset)_        | Set to `""` to force CPU and silence CUDA warnings — see below |
 
 ### Hugging Face token (optional)
 

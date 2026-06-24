@@ -63,3 +63,22 @@ def test_chunk_text_rejects_invalid_overlap():
         assert "overlap" in str(exc)
     else:
         raise AssertionError("Expected ValueError")
+
+
+def test_clean_text_crlf():
+    """CRLF line endings must not leave a trailing space before the newline."""
+    result = clean_text("line1\r\nline2")
+    assert result == "line1\nline2", repr(result)
+    assert " \n" not in result
+
+
+def test_clean_text_bare_cr():
+    """Bare CR (old Mac line endings) must be converted to LF."""
+    result = clean_text("line1\rline2")
+    assert result == "line1\nline2", repr(result)
+    assert "\r" not in result
+
+
+def test_clean_text_tabs_collapsed():
+    """Tabs should be collapsed to a single space."""
+    assert clean_text("hello\t\tworld") == "hello world"
