@@ -57,7 +57,7 @@ def load_ag_news(limit: int) -> list[dict]:
         raise ValueError("limit must be a positive integer")
 
     print("[Ingest] Downloading ag_news from Hugging Face ...")
-    ds = load_dataset("ag_news", split="train", trust_remote_code=True)
+    ds = load_dataset("fancyzhx/ag_news", split="train")
     label_map = {0: "World", 1: "Sports", 2: "Business", 3: "Sci/Tech"}
 
     rows: list[dict] = []
@@ -78,9 +78,7 @@ def load_ag_news(limit: int) -> list[dict]:
                     "metadata": meta,
                 }
             )
-    print(
-        f"[Ingest] Loaded {len(rows):,} document chunks from {min(limit, len(ds)):,} articles."
-    )
+    print(f"[Ingest] Loaded {len(rows):,} document chunks from {min(limit, len(ds)):,} articles.")
     return rows
 
 
