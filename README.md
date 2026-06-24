@@ -85,13 +85,22 @@ semantic-search-engine/
 
 ### Option A - Automated (recommended)
 
-Edit the configuration block at the top of `run_all.sh` (database password and ingestion limit), then run:
+Before running, open `run_all.sh` and edit the CONFIG block at the top:
+
+```bash
+# CONFIG - edit these values
+DB_PASSWORD="postgres"   # change this!
+INGEST_LIMIT=5000
+HF_TOKEN=""              # optional — paste your HF token here (see Configuration below)
+```
+
+`run_all.sh` automatically generates `.env` from these values, so **do not** create `.env` manually when using Option A — it will be overwritten. Then run:
 
 ```bash
 bash run_all.sh
 ```
 
-This executes all five steps in sequence: dependency installation, database creation, schema setup, document ingestion, and evaluation.
+This executes all six steps in sequence: dependency installation, database creation, schema setup, document ingestion, evaluation, and a summary.
 
 ### Option B - Step by step
 
@@ -99,9 +108,9 @@ This executes all five steps in sequence: dependency installation, database crea
 # 1. Install system packages, PostgreSQL 16, pgvector, and Python packages
 bash scripts/01_install_deps.sh
 
-# 2. Copy the environment template and set your database password
+# 2. Create and configure the environment file
 cp .env.example .env
-nano .env
+nano .env   # set DB_PASSWORD; optionally add HF_TOKEN and CUDA_VISIBLE_DEVICES
 
 # 3. Create the PostgreSQL database and user
 bash scripts/02_setup_postgres.sh
@@ -123,18 +132,54 @@ bash scripts/06_evaluate.sh
 
 ## Configuration
 
-Settings are read from a `.env` file at the project root. Copy `.env.example` to get started.
+Settings are read from a `.env` file at the project root. Copy `.env.example` to get started:
 
-| Variable          | Default          | Description                            |
-| ----------------- | ---------------- | -------------------------------------- |
-| `DB_HOST`         | localhost        | PostgreSQL host                        |
-| `DB_PORT`         | 5432             | PostgreSQL port                        |
-| `DB_NAME`         | semantic_search  | Database name                          |
-| `DB_USER`         | postgres         | Database user                          |
-| `DB_PASSWORD`     | postgres         | Database password                      |
-| `EMBEDDING_MODEL` | all-MiniLM-L6-v2 | Sentence-Transformers model identifier |
-| `TOP_K`           | 10               | Default number of results returned     |
-| `BATCH_SIZE`      | 64               | Embedding batch size during ingestion  |
+```bash
+cp .env.example .env
+nano .env
+```
+
+| Variable               | Default           | Description                                                   |
+| ---------------------- | ----------------- | ------------------------------------------------------------- |
+| `DB_HOST`              | localhost         | PostgreSQL host                                               |
+| `DB_PORT`              | 5432              | PostgreSQL port                                               |
+| `DB_NAME`              | semantic_search   | Database name                                                 |
+| `DB_USER`              | postgres          | Database user                                                 |
+| `DB_PASSWORD`          | postgres          | Database password                                             |
+| `EMBEDDING_MODEL`      | all-MiniLM-L6-v2 | Sentence-Transformers model identifier                        |
+| `TOP_K`                | 10                | Default number of results returned                            |
+| `BATCH_SIZE`           | 64                | Embedding batch size during ingestion                         |
+| `HF_TOKEN`             | _(unset)_         | Hugging Face API token — see below                            |
+| `CUDA_VISIBLE_DEVICES` | _(unset)_         | Set to `""` to force CPU and silence CUDA warnings — see below |
+
+### Hugging Face token (optional)
+
+Without a token, dataset and model downloads are unauthenticated and subject to rate limits. To enable higher limits:
+
+1. Create a free account at [huggingface.co](https://huggingface.co)
+2. Go to [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+3. Click **New token**, select **Read** scope, copy the value
+4. Add it to `.env`:
+
+```
+HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+### CUDA / GPU warning
+
+If your NVIDIA driver is older than version 525, PyTorch will emit a warning on startup:
+
+```
+UserWarning: CUDA initialization: The NVIDIA driver on your system is too old...
+```
+
+The model falls back to CPU automatically — everything still works, just slower. To suppress the warning, add this to `.env`:
+
+```
+CUDA_VISIBLE_DEVICES=
+```
+
+This tells PyTorch not to probe for a GPU. Remove the line once the driver is updated (`sudo apt install nvidia-driver-535` then reboot).
 
 ---
 

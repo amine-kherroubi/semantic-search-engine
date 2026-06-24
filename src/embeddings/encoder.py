@@ -1,11 +1,31 @@
 """
 Text embedding generation using Sentence-Transformers.
 Handles batching and progress tracking.
+
+Environment variables (set in .env):
+    EMBEDDING_MODEL      - Sentence-Transformers model name (default: all-MiniLM-L6-v2)
+    BATCH_SIZE           - Number of texts per embedding batch (default: 64)
+    HF_TOKEN             - Optional Hugging Face API token. Enables higher download
+                           rate limits when pulling models from the Hub. Generate one
+                           at https://huggingface.co/settings/tokens (read-only scope
+                           is sufficient). Leave unset to use unauthenticated access.
+    CUDA_VISIBLE_DEVICES - Set to "" in .env to force CPU inference and suppress the
+                           CUDA driver version warning emitted by PyTorch when the
+                           installed driver is too old to be used.
 """
 
 from __future__ import annotations
 
 import os
+
+# Suppress PyTorch's CUDA driver version warning.
+# The warning fires when PyTorch detects a GPU but the system NVIDIA driver is
+# too old to be used (driver < 525 for CUDA 12). Setting CUDA_VISIBLE_DEVICES=""
+# tells PyTorch not to probe for GPUs, so inference falls back to CPU silently.
+# Remove this block (or set CUDA_VISIBLE_DEVICES="" only in .env) once the driver
+# is updated to a compatible version.
+if not os.environ.get("CUDA_VISIBLE_DEVICES"):
+    os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
 
 import numpy as np
 from dotenv import load_dotenv
