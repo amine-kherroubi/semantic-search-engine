@@ -25,8 +25,10 @@
 # ║                      Leave commented-out to use unauthenticated access   ║
 # ║                      (slower on busy days but always works).             ║
 # ║                                                                          ║
-# ║       INGEST_LIMIT — passed via the LIMIT env-var to 04_ingest.sh.       ║
+# ║       INGEST_LIMIT — number of AG News articles to ingest.               ║
 # ║                      Default is 5000; the full dataset has ~120,000.     ║
+# ║                      Can also be overridden at the command line:         ║
+# ║                        INGEST_LIMIT=20000 bash run_all.sh                ║
 # ║                                                                          ║
 # ║  3. Then run:  bash run_all.sh                                           ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
@@ -54,8 +56,9 @@ source "$ENV_FILE"
 set +a
 
 # ── Optional overrides via environment variables ───────────────────────────
-# You can override INGEST_LIMIT and BATCH_SIZE at the command line:
-#   INGEST_LIMIT=20000 BATCH_SIZE=128 bash run_all.sh
+# INGEST_LIMIT and BATCH_SIZE are read from .env above; the ${VAR:-default}
+# syntax here only kicks in if they were not set there, giving command-line
+# overrides the highest priority, then .env, then the built-in fallback.
 INGEST_LIMIT="${INGEST_LIMIT:-5000}"
 BATCH_SIZE="${BATCH_SIZE:-64}"
 
