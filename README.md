@@ -60,7 +60,7 @@ semantic-search-engine/
 |   |   `-- encoder.py            Sentence-Transformers wrapper with batching and caching
 |   |-- search/
 |   |   |-- semantic.py           pgvector cosine similarity search
-|   |   `-- classical.py         In-memory TF-IDF search engine
+|   |   `-- classical.py          In-memory TF-IDF search engine
 |   `-- utils/
 |       |-- preprocess.py         Text cleaning, chunking, and truncation
 |       `-- display.py            Rich terminal output for search results
