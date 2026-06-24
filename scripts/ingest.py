@@ -22,9 +22,9 @@ from typing import Any, cast
 from datasets import load_dataset
 from tqdm import tqdm
 
-from src.db import get_session, insert_documents, insert_embeddings
+from src.db import get_session, get_raw_connection, insert_documents, insert_embeddings
 from src.embeddings import encode_texts
-from src.utils import clean_text
+from src.utils import clean_text, chunk_text
 
 _MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 
@@ -60,18 +60,27 @@ def load_ag_news(limit: int) -> list[dict]:
     ds = load_dataset("ag_news", split="train", trust_remote_code=True)
     label_map = {0: "World", 1: "Sports", 2: "Business", 3: "Sci/Tech"}
 
-    rows = []
+    rows: list[dict] = []
     for item_obj in ds.select(range(min(limit, len(ds)))):
         item = cast(dict[str, Any], item_obj)
-        rows.append(
-            {
-                "title": item["text"].split(".")[0][:120],  # first sentence as title
-                "content": clean_text(item["text"]),
-                "source": "ag_news",
-                "metadata": {"label": label_map.get(item["label"], "Unknown")},
-            }
-        )
-    print(f"[Ingest] Loaded {len(rows):,} documents.")
+        cleaned = clean_text(item["text"])
+        title = item["text"].split(".")[0][:120]  # first sentence as title
+        meta = {"label": label_map.get(item["label"], "Unknown")}
+        # chunk_text splits documents that exceed the model's token window (256 tokens).
+        # AG News articles are short in practice, so chunking rarely fires, but it
+        # prevents silent truncation for any articles that are unusually long.
+        for chunk in chunk_text(cleaned, max_tokens=256, overlap=32):
+            rows.append(
+                {
+                    "title": title,
+                    "content": chunk,
+                    "source": "ag_news",
+                    "metadata": meta,
+                }
+            )
+    print(
+        f"[Ingest] Loaded {len(rows):,} document chunks from {min(limit, len(ds)):,} articles."
+    )
     return rows
 
 
@@ -104,7 +113,17 @@ def run(limit: int, batch_size: int, model: str) -> None:
         with get_session() as session:
             insert_embeddings(session, records[i : i + chunk])
 
-    print(f"[Ingest] OK Done. {len(doc_ids):,} documents with embeddings stored.")
+    print(f"[Ingest] OK Done. {len(doc_ids):,} document chunks with embeddings stored.")
+
+    # Prompt the PostgreSQL query planner to use the IVFFlat index.
+    # Without VACUUM ANALYZE the planner may choose a sequential scan because
+    # the table statistics are stale immediately after a bulk insert.
+    print("[Ingest] Running VACUUM ANALYZE to update planner statistics ...")
+    with get_raw_connection() as conn:
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute("VACUUM ANALYZE embeddings;")
+    print("[Ingest] VACUUM ANALYZE complete.")
 
 
 if __name__ == "__main__":

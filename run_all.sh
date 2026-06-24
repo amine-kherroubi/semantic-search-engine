@@ -8,7 +8,7 @@ set -euo pipefail
 # CONFIG - edit these values
 DB_NAME="semantic_search"
 DB_USER="postgres"
-DB_PASSWORD="postgres"      # change this!
+DB_PASSWORD="postgres"       # change this!
 INGEST_LIMIT=5000            # number of documents to ingest
 BATCH_SIZE=64
 
@@ -32,27 +32,27 @@ echo "Semantic Search Engine - Full Pipeline"
 # Make all scripts executable
 chmod +x "$SCRIPT_DIR"/scripts/*.sh
 
-echo "Step 1/5: Install dependencies"
+echo "Step 1/6: Install dependencies"
 bash "$SCRIPT_DIR/scripts/01_install_deps.sh"
 
 echo ""
-echo "Step 2/5: Configure PostgreSQL"
+echo "Step 2/6: Configure PostgreSQL"
 bash "$SCRIPT_DIR/scripts/02_setup_postgres.sh"
 
 echo ""
-echo "Step 3/5: Apply database schema"
+echo "Step 3/6: Apply database schema"
 bash "$SCRIPT_DIR/scripts/03_init_schema.sh"
 
 echo ""
-echo "Step 4/5: Ingest dataset (limit=$INGEST_LIMIT)"
+echo "Step 4/6: Ingest dataset (limit=$INGEST_LIMIT)"
 LIMIT=$INGEST_LIMIT BATCH_SIZE=$BATCH_SIZE \
     bash "$SCRIPT_DIR/scripts/04_ingest.sh"
 
 echo ""
-echo "Step 5/5: Run evaluation"
+echo "Step 5/6: Run evaluation"
 bash "$SCRIPT_DIR/scripts/06_evaluate.sh"
 
 echo ""
-echo "Pipeline complete."
+echo "Step 6/6: Pipeline complete."
 echo "To search interactively: bash scripts/05_search.sh"
 echo "Single query: bash scripts/05_search.sh \"your query\""

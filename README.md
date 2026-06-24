@@ -73,7 +73,8 @@ semantic-search-engine/
 |   `-- analysis.ipynb            EDA, t-SNE visualisation, and comparative analysis
 |
 |-- tests/
-|   `-- test_preprocess.py        Unit tests for preprocessing utilities
+|   |-- test_preprocess.py        Unit tests for preprocessing utilities
+|   `-- test_validation.py        Validation tests for pipeline parameters and error handling
 |
 `-- data/                         Generated outputs (charts, CSVs) - not committed
 ```
