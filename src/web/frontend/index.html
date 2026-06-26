@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Semantic Search Engine</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="brand">semsearch<span class="brand-dot">/</span>console</span>
+    <span id="health-pill" class="pill pill-unknown">checking API…</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" data-view="search" role="tab" aria-selected="false">Search</button>
+    <button class="tab active" data-view="browse" role="tab" aria-selected="true">Browse Articles</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ SEARCH VIEW ============ -->
+  <section id="view-search" class="view">
+
+    <form id="search-form" class="search-bar">
+      <input
+        id="query-input"
+        type="text"
+        placeholder="Try: renewable energy breakthroughs"
+        autocomplete="off"
+        required
+      />
+      <select id="approach-select" aria-label="Retrieval approach">
+        <option value="semantic" selected>Semantic</option>
+        <option value="tfidf">TF-IDF</option>
+      </select>
+      <select id="topk-select" aria-label="Number of results">
+        <option value="5">Top 5</option>
+        <option value="10" selected>Top 10</option>
+        <option value="20">Top 20</option>
+        <option value="50">Top 50</option>
+      </select>
+      <button type="submit" id="search-btn">Search</button>
+    </form>
+
+    <div id="search-stats" class="stats-strip" hidden></div>
+
+    <div id="search-status" class="status-line"></div>
+
+    <ul id="results-list" class="results-list"></ul>
+
+  </section>
+
+  <!-- ============ BROWSE VIEW ============ -->
+  <section id="view-browse" class="view active">
+
+    <div class="browse-toolbar">
+      <input
+        id="filter-text"
+        type="text"
+        placeholder="Filter title/content…"
+      />
+      <select id="filter-category" aria-label="Filter by category">
+        <option value="">All categories</option>
+      </select>
+      <select id="page-size-select" aria-label="Page size">
+        <option value="10">10 / page</option>
+        <option value="25" selected>25 / page</option>
+        <option value="50">50 / page</option>
+        <option value="100">100 / page</option>
+      </select>
+      <button id="refresh-btn" type="button">Refresh</button>
+    </div>
+
+    <div id="browse-status" class="status-line"></div>
+
+    <div class="table-wrap">
+      <table id="articles-table">
+        <thead>
+          <tr>
+            <th class="col-id">ID</th>
+            <th class="col-title">Title</th>
+            <th class="col-source">Source</th>
+            <th class="col-category">Category</th>
+          </tr>
+        </thead>
+        <tbody id="articles-tbody">
+          <!-- rows injected by app.js -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="pagination">
+      <button id="prev-page" type="button">&larr; Prev</button>
+      <span id="page-indicator">Page 1</span>
+      <button id="next-page" type="button">Next &rarr;</button>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
